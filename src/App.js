@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
+import axios from 'axios'
+import Styled from './components/Styled'
+import Character from './components/Character'
+
 import './App.css';
 
 const App = () => {
@@ -9,10 +13,43 @@ const App = () => {
   // side effect in a component, you want to think about which state and/or props it should
   // sync up with, if any.
 
+  const [starWar, setStarWar] = useState([]);
+  
+  useEffect(() => {
+  axios.get('https://swapi.dev/api/people/?page=1')
+  .then(res => {
+    setStarWar(res.data)
+    console.log(res.data)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  }, [starWar])
+
+  //console.log('star', starWar.name)
   return (
+      
     <div className="App">
+      
+      <Styled>
       <h1 className="Header">Characters</h1>
-    </div>
+      <ul>{starWar.name} {starWar.age} </ul>
+      
+      </Styled>
+      {starWar.map((star) => {
+        
+        return (
+          <>
+          
+          <Character
+          key={starWar.name}
+          starWar = {star.name}
+          starWarYears = {star.birth_year}
+          />
+          </>
+        )
+      })}
+    </div> 
   );
 }
 
